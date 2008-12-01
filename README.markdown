@@ -1,13 +1,17 @@
 # bliki
 
-bliki is a blog + wiki engine. it is not finished yet, so use it at your own risk.
+bliki is a blog + wiki engine. it is not finished yet, so use it at your own risk. I'm currently using it on <http://bomberstudios.com> without (too much) problems, but as I coded it and know how it works that's hardly an objective benchmark.
+
+If you need to write content in Markdown, store it using Stone, and you think your host will be happy sending heavily cached content quite faster than Rails, then bliki might be worth looking at...
 
 
 ## Features
 - Theme support
 - Disqus comments
 - Markdown content
+- Pingomatic ping on post creation
 - A crude importer for WordPress posts.
+
 
 ## Required gems
 - sinatra (included as a module)
