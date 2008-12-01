@@ -1,27 +1,24 @@
 # bliki
 
+bliki is a blog + wiki engine. it is not finished yet, so use it at your own risk.
+
+
 ## Features
 - Theme support
 - Disqus comments
 - Markdown content
+- A crude importer for WordPress posts.
 
 ## Required gems
-
-* facets
-* english
-* rdiscount
-* stone
-* validatable
-* thin
-* rack
-* daemons
-* sinatra
-* haml  
-* builder
+- sinatra (included as a module)
+- stone (included as a module from my fork, as the original Stone contains a nice bug that has not been fixed yet)
+- rdiscount
+- rack
+- haml
+- builder
 
 ## More required stuff
-
-* sinatra-cache
+- sinatra-cache (included as a module)
 
 
 ## TODO
