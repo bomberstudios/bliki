@@ -1,0 +1,54 @@
+# bliki configuration
+author_name: Your Full Name
+# Shall we protect the admin with user and password?
+use_auth: true
+# Username for admin
+username: username
+# Password for admin. To generate, run this Ruby code:
+# require 'digest/sha1'
+# p Digest::SHA1.hexdigest('password')
+# By default, the password is 'password'
+password: 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8
+# Use Disqus comments (needs an account on http://disqus.com)
+use_comments: true
+# The short name of your site in disqus
+disqus_id: your_disqus_id
+# Theme. If not set, it is 'default'
+# theme: default
+
+development:
+  name: Your Blog Title
+  title: Your Blog Subtitle
+  base_url: http://0.0.0.0:4567
+  # number of posts in home and feed
+  limit: 3
+  # If you use Reinvigorate, put your tracking code here
+  reinvigorate_code: xxxxx-xxxxxxxxxx
+  # Display comments
+  use_comments: false
+  # Ping pingomatic.com when posting on the blog
+  # Wiki pages never send pings
+  ping: false
+
+production:
+  name: Your Blog Title
+  title: Your Blog Subtitle
+  base_url: http://yourdomain.com
+  limit: 5
+  reinvigorate_code: xxxxx-xxxxxxxxxx
+  use_comments: true
+
+test:
+  name: Your Blog Title
+  title: Your Blog Subtitle
+  base_url: http://0.0.0.0:4567
+  # Do not use auth for testing
+  use_auth: false
+  limit: 2
+  use_comments: false
+  ping: false
+
+deploy:
+  host: yourhost.com
+  folder: www/yoursite
+  username: username

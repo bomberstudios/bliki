@@ -1,0 +1,23 @@
+<div class="group">
+<% @posts.each do |post| %>
+  <div class="<%= post.class.to_s.downcase %>">
+    <h2 class="title"><%= link_to post.title, post.link %></h2>
+    <small>posted on <%= post.date %>, filed under <%= tag_list post.tags %></small>
+    <div class="body">
+    <%= post.content %>
+    </div>
+    <%= "<p><a href='#{post.link}#disqus_thread'>View Comments</a></p>" if Sinatra.options.use_comments %>
+  </div>
+<% end %>
+</div>
+
+<% if !@archives.nil? %>
+<div class="group">
+  <h2>archives...</h2>
+  <% @archives.each do |post| %>
+  <h3><%= link_to post.title, post.link %> (<%= post.date %>)</h3>
+  <% end %>
+</div>
+<% end %>
+
+<div class="admin"><a href="/new" accesskey="n">new</a></div>

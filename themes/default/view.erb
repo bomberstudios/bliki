@@ -1,0 +1,8 @@
+<div class="<%= @post.class.to_s.downcase %>">
+  <h2 class="title"><%= @post.title %></h2>
+  <small>posted on <%= @post.date %> by <%= Sinatra.options.author_name %>, tagged with <%= tag_list @post.tags %></small>
+  <div class="body">
+    <%= @post.content %>
+  </div>
+</div>
+<div class="admin"><a href="<%= @post.edit_link %>" accesskey="e">edit</a></div>

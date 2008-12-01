@@ -1,0 +1,16 @@
+<h2>Everything tagged with ‘<%= @tag %>’ on <%= Sinatra.options.name %>:</h2>
+<div class="group">
+<% @posts.each do |post| %>
+  <h2 class="title"><%= link_to post.title, post.link %></h2>
+  <small>A <%= post.class.to_s.downcase %> published on <%= post.date %>, filed under <%= tag_list post.tags %></small>
+<% end %>
+</div>
+
+<% if !@archives.nil? %>
+<div class="group">
+  <h2>More...</h2>
+  <% @archives.each do |post| %><h3><%= link_to post.title, post.link %> (<%= post.date %>)</h3><% end %>
+</div>
+<% end %>
+
+<div class="admin"><a href="/new" accesskey="n">new</a></div>
