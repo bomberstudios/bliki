@@ -21,9 +21,6 @@ end
 
 task :install do
   sh("sudo gem install rack rdiscount haml builder feedvalidator")
-  sh("git submodule add git://github.com/kematzy/sinatra-cache.git lib/sinatra-cache")
-  sh("git submodule add git://github.com/bmizerany/sinatra.git lib/sinatra")
-  sh("git submodule add git://github.com/bomberstudios/stone.git lib/stone")
   sh("git submodule init")
   sh("git submodule update")
 end
