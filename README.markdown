@@ -4,22 +4,34 @@ bliki is a blog + wiki engine. it is not finished yet, so use it at your own ris
 
 If you need to write content in Markdown, store it using Stone, and you think your host will be happy sending heavily cached content quite faster than Rails, then bliki might be worth looking at...
 
+I have included a config.ru file you can use for Passenger (mod_rails) if you use Dreamhost.
 
-## Features
-- Theme support
-- Disqus comments
-- Markdown content
-- Pingomatic ping on post creation
-- A crude importer for WordPress posts.
+There's also a (crude) importer for WordPress posts. It is only been tested with the latest (i.e: svn) WordPress version, and its only purpose was to import content from *my* own blog. If it works for you that would be great, but don't count on it :)
+
+Comments are handled by <http://disqus.com>, because a) I'm too bad a programmer to code a decent comment system, b) the habtm system in Stone sucks big time and c) Disqus already did it.
+
+Themes are stored on the 'themes' folder. There's a sample theme (called 'default', in a wicked display of imagination) you can copy to a new folder and tweak to your heart's content.
+
+There's also support for Reinvigorate tracking codes, but it's easy to add your own tracking.
+
+Last (but not least), whenever you publish a post Pingomatic will be pinged. Wiki pages do not trigger pings.
 
 
-## Required gems
+## Setup
+- clone the repo
+- run 'rake install'
+- copy 'config.sample.yml' to 'config.yml' and edit it to suit your needs
+- run 'ruby bliki.rb' and cross fingers
+
+
+## Required gems (hopefully installed by 'rake install')
 - sinatra (included as a module)
 - stone (included as a module from my fork, as the original Stone contains a nice bug that has not been fixed yet)
 - rdiscount
 - rack
 - haml
 - builder
+
 
 ## More required stuff
 - sinatra-cache (included as a module)
