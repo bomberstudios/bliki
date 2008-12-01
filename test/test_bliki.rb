@@ -46,7 +46,7 @@ class BlikiTest < Test::Unit::TestCase
   # Content
   def test_title_is_ok
     get_it "/"
-    assert body.scan(/Bomber Studios Test/).size > 0
+    assert body.scan(/#{Sinatra.options.title}/).size > 0
   end
 
   # Mock content
