@@ -130,6 +130,7 @@ class BlikiTest < Test::Unit::TestCase
   def test_posts_have_an_update_date
     first_post = Post[1]
     assert_not_nil first_post.updated_at
+    assert_kind_of DateTime, first_post.updated_at
   end
   def test_posts_updated_at_field_is_updated_on_save
     first_post = Post[1]
@@ -137,6 +138,16 @@ class BlikiTest < Test::Unit::TestCase
     first_post.tags = "foo, bar, baz"
     first_post.save
     assert_not_equal original_updated_at, first_post.updated_at
+    assert_kind_of DateTime, first_post.updated_at
+  end
+  def test_posts_updated_at_field_is_updated_on_put
+    first_post = Post[1]
+    original_updated_at = first_post.updated_at
+    first_post.update_attributes(
+      :tags => "foo, bar, baz"
+    )
+    assert_not_equal original_updated_at, first_post.updated_at
+    assert_kind_of DateTime, first_post.updated_at
   end
   # # AUTH
   # def test_auth_for_new_post
