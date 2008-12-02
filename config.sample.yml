@@ -13,8 +13,8 @@ password: 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8
 use_comments: true
 # The short name of your site in disqus
 disqus_id: your_disqus_id
-# Theme. If not set, it is 'default'
-# theme: default
+# Theme
+theme: default
 
 development:
   name: Your Blog Title
