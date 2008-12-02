@@ -15,7 +15,6 @@ end
 task :test do
   %x(mkdir db) unless File.exist?("db")
   %x(mkdir db/test) unless File.exist?("db/test")
-  sh "rcov --exclude gem -Ilib test/test_bliki.rb"
   sh("ruby test/test_bliki.rb")
 end
 
