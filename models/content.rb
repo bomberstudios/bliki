@@ -20,10 +20,6 @@ module BlikiContent
       @content_plugins = self.send(m, @content_plugins) if m =~ /^plugin_/
     end
     html = RDiscount.new(@content_plugins).to_html
-    # wiki links in [[link]] format
-    html.gsub!(/\[\[(\w+)\]\]/,'<a href="'+Sinatra.options.base_url+'/\1">\1</a>')
-    # WikiWords
-    # html.gsub!(/([A-Z]+)([a-z]+)([A-Z]+)\w+/,'<a href="'+Sinatra.options.base_url+'/wiki/\0">\0</a>')
     return html
   end
   def link
