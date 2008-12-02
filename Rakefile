@@ -21,9 +21,6 @@ end
 
 task :install do
   sh("sudo gem install rack rdiscount haml builder feedvalidator")
-  sh("git submodule add git://github.com/kematzy/sinatra-cache.git lib/sinatra-cache")
-  sh("git submodule add git://github.com/bmizerany/sinatra.git lib/sinatra")
-  sh("git submodule add git://github.com/bomberstudios/stone.git lib/stone")
   sh("git submodule init")
   sh("git submodule update")
 end
@@ -78,6 +75,7 @@ task :deploy do
   options = YAML.load(File.read("config.yml"))["deploy"]
   sh("git push")
   sh("scp config.yml #{options['hostname']}:#{options['folder']}/config.yml")
+  sh("rsync -azc themes/ #{options['hostname']}:#{options['folder']}/themes/")
   sh("ssh #{options['hostname']} 'cd #{options['folder']}; rake update'")
 end
 task :default => :test
