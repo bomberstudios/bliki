@@ -19,7 +19,7 @@ task :test do
 end
 
 task :install do
-  sh("sudo gem install rack rdiscount haml builder feedvalidator")
+  sh("sudo gem install rack rdiscount haml builder feedvalidator validatable english facets")
   sh("git submodule init")
   sh("git submodule update")
 end
