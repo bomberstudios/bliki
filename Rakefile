@@ -24,6 +24,12 @@ task :install do
   sh("git submodule update")
 end
 
+desc "Create initial configuration"
+task :configure do
+  require "lib/configuration"
+  Bliki::Configuration::configure "config.sample.yml", "config.yml"
+end
+
 namespace :import do
   desc "Clean imported data"
   task :clean do
