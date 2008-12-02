@@ -1,3 +1,5 @@
+require "lib/slugalizer"
+
 module BlikiContent
   def update_slug
     self.nicetitle = self.title.slugalize
