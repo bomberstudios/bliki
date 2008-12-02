@@ -1,5 +1,3 @@
-require "lib/slugalizer"
-
 class Page
   include Stone::Resource
   include BlikiContent
