@@ -49,6 +49,6 @@ test:
   ping: false
 
 deploy:
-  host: yourhost.com
+  hostname: yourhost.com
   folder: www/yoursite
   username: username
