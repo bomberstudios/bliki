@@ -20,7 +20,7 @@ Last (but not least), whenever you publish a post Pingomatic will be pinged. Wik
 ## Setup
 - clone the repo
 - run 'rake install'
-- copy 'config.sample.yml' to 'config.yml' and edit it to suit your needs
+- copy 'config.sample.yml' to 'config.yml' and edit it to suit your needs (or run 'rake configure')
 - run 'ruby bliki.rb' and cross fingers
 
 
