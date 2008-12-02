@@ -41,7 +41,7 @@ production:
 test:
   name: Your Blog Title
   title: Your Blog Subtitle
-  base_url: http://0.0.0.0:4567
+  base_url: http://yourdomain.com
   # Do not use auth for testing
   use_auth: false
   limit: 2
