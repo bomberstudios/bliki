@@ -10,12 +10,12 @@ module Bliki
       raise "#{input} file does not exists" if !File.exists? input
       if File.exists? output
         print "#{output} file already exists. Overwrite? (y/N): "
-        return if readline != 'y' 
+        return if readline != 'y'
       end
       own = update_hash YAML.load_file(input)
       File.open(output, "w+") { |f| f.puts own.to_yaml }
     end
-  
+
     private
     def self.update_hash hash, prefix = nil
       if prefix
