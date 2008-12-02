@@ -7,6 +7,9 @@ require "lib/helpers"
 require "lib/slugalizer"
 require "lib/auth"
 require "rdiscount"
+Dir["lib/plugin/*"].each do |f|
+  require f
+end
 
 #####################################################################################
 # Setup

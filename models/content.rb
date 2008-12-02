@@ -15,7 +15,11 @@ module BlikiContent
     self.created_at.strftime("%Y")
   end
   def content
-    html = RDiscount.new(body).to_html
+    @content_plugins = body
+    self.methods.each do |m|
+      @content_plugins = self.send(m, @content_plugins) if m =~ /^plugin_/
+    end
+    html = RDiscount.new(@content_plugins).to_html
     # wiki links in [[link]] format
     html.gsub!(/\[\[(\w+)\]\]/,'<a href="'+Sinatra.options.base_url+'/\1">\1</a>')
     # WikiWords
