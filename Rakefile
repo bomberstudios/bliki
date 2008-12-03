@@ -31,11 +31,11 @@ task :configure do
 end
 
 namespace :import do
-  desc "Clean imported data"
+  desc "Clean imported data. Run with DB=environment (default: development)"
   task :clean do
-    %x(rm -Rf db/#{ENV['DB']}/*)
+    %x(rm -Rf db/#{ENV['DB'] || 'development'}/*)
   end
-  desc "Import contents from WordPress XML"
+  desc "Import contents from WordPress XML. Run with DB=environment (default: development)"
   task :wordpress => :clean do
     # Some code taken from http://github.com/swenson/scanty_wordpress_import/raw/master/import.rb
     require 'rubygems'
@@ -45,7 +45,7 @@ namespace :import do
 
     file = File.read("db/wordpress.xml")
 
-    Stone.start(File.join(Dir.pwd, "db/#{ENV['DB']}"), Dir.glob(File.join(Dir.pwd,"models/*")))
+    Stone.start(File.join(Dir.pwd, "db/#{ENV['DB'] || 'development'}"), Dir.glob(File.join(Dir.pwd,"models/*")))
 
     # Fix some nasty thingies
     file.gsub!("// <![CDATA[","")
