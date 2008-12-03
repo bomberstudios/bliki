@@ -1,13 +1,9 @@
-# bliki power
 require "rubygems"
 require "lib/sinatra/lib/sinatra"
 require "lib/sinatra-cache/lib/cache"
 require "lib/stone/lib/stone"
-require "lib/helpers"
-require "lib/slugalizer"
-require "lib/auth"
 require "rdiscount"
-Dir["lib/plugin/*"].each do |f|
+Dir["lib/*.rb","lib/plugin/*.rb"].each do |f|
   require f
 end
 
