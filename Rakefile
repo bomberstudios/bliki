@@ -26,7 +26,7 @@ end
 
 desc "Create initial configuration"
 task :configure do
-  require "lib/configuration"
+  require "lib/tools/configuration"
   Bliki::Configuration::configure "config.sample.yml", "config.yml"
 end
 
