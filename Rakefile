@@ -48,6 +48,6 @@ task :deploy do
   sh("git push")
   sh("scp config.yml #{options['hostname']}:#{options['folder']}/config.yml")
   sh("rsync -azc themes/ #{options['hostname']}:#{options['folder']}/themes/")
-  sh("ssh #{options['hostname']} 'cd #{options['folder']}; rake update'")
+  sh("ssh #{options['username']}@#{options['hostname']} 'cd #{options['folder']}; rake update'")
 end
 task :default => :test
