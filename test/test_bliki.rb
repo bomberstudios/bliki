@@ -1,8 +1,8 @@
 $LOAD_PATH.unshift "../lib"
 
 require 'rubygems'
-require 'sinatra'
-require 'sinatra/test/unit'
+require 'lib/sinatra/lib/sinatra'
+require 'lib/sinatra/lib/sinatra/test/unit'
 require 'bliki'
 require 'feed_validator'
 require 'fileutils'

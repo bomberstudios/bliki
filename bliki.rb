@@ -1,15 +1,16 @@
 require "rubygems"
+require "lib/datetime"
 require "lib/sinatra/lib/sinatra"
 require "lib/sinatra-cache/lib/cache"
 require "lib/stone/lib/stone"
 require "rdiscount"
-
 Dir["lib/*.rb"].each do |f|
   require f
 end
 Dir["lib/plugin/*.rb"].each do |f|
   require f
 end
+
 
 #####################################################################################
 # Setup
