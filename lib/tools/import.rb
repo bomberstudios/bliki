@@ -1,18 +1,23 @@
 # Import tools
-require "rubygems"
+require 'rubygems'
 require 'rexml/document'
+require 'lib/datetime'
 require 'time'
 require 'stone'
 
-def import_wordpress_content from_filename, to_environment
+def parse_wordpress_xml from_filename
   file = File.read(from_filename)
-
-  Stone.start(File.join(Dir.pwd, "db/#{to_environment}"), Dir.glob(File.join(Dir.pwd,"models/*")))
-
   # Fix some nasty thingies
   file.gsub!("// <![CDATA[","")
   file.gsub!("// ]]>","")
-  doc = REXML::Document.new file
+  REXML::Document.new file
+end
+
+def import_wordpress_content from_filename, to_environment
+  Stone.start(File.join(Dir.pwd, "db/#{to_environment}"), Dir.glob(File.join(Dir.pwd,"models/*")))
+
+  doc = parse_wordpress_xml(from_filename)
+
   doc.root.elements["channel"].elements.each("item") do |item| 
     # if it's a published post, then we import it
     if item.elements["wp:post_type"].text == "post" and item.elements["wp:status"].text == "publish" then
