@@ -37,9 +37,15 @@ helpers do
     return "<div id=\"disqus_thread\"></div><script type=\"text/javascript\" src=\"http://disqus.com/forums/#{Sinatra.options.disqus_id}/embed.js\"></script><noscript><a href=\"http://#{Sinatra.options.disqus_id}.disqus.com/?url=ref\">View the discussion thread.</a></noscript><a href=\"http://disqus.com\" class=\"dsq-brlink\">blog comments powered by <span class=\"logo-disqus\">Disqus</span></a>"
   end
   def form
+    if @post
+      @title = @post.title
+    else
+      @title = params[:slug]
+    end
+
     return <<-HTML
     <form action="" method="post" accept-charset="utf-8">
-      <input type="text" name="title" value="#{@post.title unless @post.nil?}" id="title" /><br>
+      <input type="text" name="title" value="#{@title}" id="title" /><br>
       <input type="text" name="tags" value="#{@post.tags unless @post.nil?}" id="tags" /><br>
       <textarea name="body" rows="20" cols="40">#{@post.body unless @post.nil?}</textarea><br>
       <p><input type="submit" value="Continue &rarr;" accesskey="s" /></p>
