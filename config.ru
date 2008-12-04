@@ -1,6 +1,7 @@
 ENV['GEM_PATH'] = ENV['HOME'] + '/.gems'
 
 require 'rubygems'
+require 'lib/datetime'
 require 'lib/sinatra/lib/sinatra'
 
 Sinatra::Application.default_options.merge!(
