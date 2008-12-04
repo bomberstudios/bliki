@@ -31,22 +31,29 @@ task :configure do
 end
 
 namespace :import do
-  desc "Clean imported data. Run with DB=environment (default: development)"
+  require 'lib/tools/import'
+  desc "Clean imported data in DB=environment (default: development)"
   task :clean do
     %x(rm -Rf db/#{ENV['DB'] || 'development'}/*)
   end
-  desc "Import contents from WordPress XML. Run with DB=environment (default: development)"
+  desc "Import posts from WordPress in DB=environment (default: development)"
   task :wordpress => :clean do
-    require 'lib/tools/import'
     import_wordpress_content(ENV['FILE'] || "db/wordpress.xml", ENV['DB'] || 'development')
   end
+  desc "Import comments from WordPress XML in DB=environment (default: development)"
+  task :comments => :clean do
+    import_wordpress_comments()
+  end
+  # task :models do
+  #   update_model_files
+  # end
 end
 
 task :deploy do
   require "yaml"
   options = YAML.load(File.read("config.yml"))["deploy"]
   sh("scp config.yml #{options['username']}@#{options['hostname']}:#{options['folder']}/config.yml")
-  sh("rsync -azc themes/ #{options['username']}@#{options['hostname']}:#{options['folder']}/themes/")
+  sh("rsync -arzc -e=ssh themes/ #{options['username']}@#{options['hostname']}:#{options['folder']}/themes/")
   sh("ssh #{options['username']}@#{options['hostname']} 'cd #{options['folder']}; rake update'")
 end
 task :default => :test
