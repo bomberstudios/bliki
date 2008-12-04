@@ -19,7 +19,7 @@ task :test do
 end
 
 task :install do
-  sh("sudo gem install rack rdiscount haml builder feedvalidator validatable english facets")
+  sh("sudo gem install rack rdiscount haml builder feedvalidator validatable english facets mongrel daemons")
   sh("git submodule init")
   sh("git submodule update")
 end
@@ -46,8 +46,8 @@ task :deploy do
   require "yaml"
   options = YAML.load(File.read("config.yml"))["deploy"]
   sh("git push")
-  sh("scp config.yml #{options['hostname']}:#{options['folder']}/config.yml")
-  sh("rsync -azc themes/ #{options['hostname']}:#{options['folder']}/themes/")
+  sh("scp config.yml #{options['username']}@#{options['hostname']}:#{options['folder']}/config.yml")
+  sh("rsync -azc themes/ #{options['username']}@#{options['hostname']}:#{options['folder']}/themes/")
   sh("ssh #{options['username']}@#{options['hostname']} 'cd #{options['folder']}; rake update'")
 end
 task :default => :test
