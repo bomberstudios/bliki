@@ -178,6 +178,21 @@ class BlikiTest < Test::Unit::TestCase
     assert_equal 200, status
   end
 
+  # Content
+  def test_wikilinks
+    new_page = Page.new(:title => "test_page", :body => "[[wikilink1]] [[wikilink2]]", :tags => "wiki")
+    new_page.save
+    get_it "/test_page"
+    assert body.scan("<a href=\"#{Sinatra.options.base_url}/wikilink1\">wikilink1</a>").size > 0
+    assert body.scan("<a href=\"#{Sinatra.options.base_url}/wikilink2\">wikilink2</a>").size > 0
+  end
+  def test_wikiwords
+    new_page = Page.new(:title => "test_wikiwords", :body => "WikiWord WikiWikiWord", :tags => "wiki")
+    new_page.save
+    get_it "/test_wikiwords"
+    assert body.scan("<a href=\"#{Sinatra.options.base_url}/wikiword\">WikiWord</a>").size > 0
+    assert body.scan("<a href=\"#{Sinatra.options.base_url}/wikiwikiword\">WikiWikiWord</a>").size > 0
+  end
   # CSS: Base CSS
   def test_css_works
     get_it "/base.css"
