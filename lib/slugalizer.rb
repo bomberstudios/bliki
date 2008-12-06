@@ -1,7 +1,7 @@
 require "iconv"
 class String
-  def slugalize(separator = "-")
-    re_separator = Regexp.escape("-")
+  def slugalize(separator='-')
+    re_separator = Regexp.escape(separator)
     result = self.downcase
     # result = Iconv.iconv('ascii//ignore//translit', 'utf-8', self).to_s.downcase
     # result.gsub!(/(~n|~N)/,'n')
@@ -11,6 +11,10 @@ class String
     result.gsub!(/(í|Í)/,'i')
     result.gsub!(/(ó|Ó)/,'o')
     result.gsub!(/(ú|Ú)/,'u')
+    result.gsub!(/(ä|Ä)/,'ae')
+    result.gsub!(/(ö|Ö)/,'oe')
+    result.gsub!(/(ü|Ü)/,'ue')
+    result.gsub!(/ß/,'ss')    
     result.gsub!(/[¡¿!?':"]/,'')
     # result.gsub!(/[^\x00-\x7F]+/, '')                      # Remove non-ASCII (e.g. diacritics).
     result.gsub!(/[^a-z0-9\-_\+]+/i, separator)            # Turn non-slug chars into the separator.
