@@ -26,19 +26,22 @@ end
 class BlikiTest < Test::Unit::TestCase
   def setup
     # reset cache
-    Dir["public/**/*"].each do |dir|
-      FileUtils.rm Dir[dir]
+    Dir["public/**/*"].each do |file|
+      FileUtils.rm file
+    end
+    Dir["test/public/**/*"].each do |file|
+      FileUtils.rm file
     end
     # clear mock content
     Dir["db/test/datastore/**/*"].each do |file|
-      FileUtils.remove_file file unless File.directory? file
+      FileUtils.rm file unless File.directory? file
     end
     Stone.start(Dir.pwd + "/db/#{Sinatra.env.to_s}", Dir.glob(File.join(Dir.pwd,"models/*")))
   end
   def teardown
     # clear mock content
     Dir["db/test/datastore/**/*"].each do |file|
-      FileUtils.remove_file file unless File.directory? file
+      FileUtils.rm file unless File.directory? file
     end
   end
 
@@ -238,7 +241,8 @@ class BlikiTest < Test::Unit::TestCase
     assert File.exist?(Sinatra.options.public / a.name ), "File not created"
   end
   test "Content for attachments is saved correctly" do
-    a = Attachment[1]
+    a = Attachment.new(:name => "attach_content", :path => Sinatra.options.public, :content => File.open("README.markdown"))
+    a.save
     assert File.open(a.path / a.name,"r").read.scan("bliki").size > 1
   end
 
