@@ -8,10 +8,25 @@ require 'feed_validator'
 require 'fileutils'
 require 'feed_validator/assertions'
 
+class Test::Unit::TestCase
+  def self.test(name, &block)
+    test_name = "test_#{name.gsub(/\s+/,'_')}".to_sym
+    defined = instance_method(test_name) rescue false
+    raise "#{test_name} is already defined in #{self}" if defined
+    if block_given?
+      define_method(test_name, &block)
+    else
+      define_method(test_name) do
+        flunk "No implementation provided for #{name}"
+      end
+    end
+  end
+end
+
 class BlikiTest < Test::Unit::TestCase
   def setup
     # reset cache
-    ["public/*.html","public/*.css","public/post/*.html","public/wiki/*"].each do |dir|
+    Dir["public/**/*"].each do |dir|
       FileUtils.rm Dir[dir]
     end
     # clear mock content
@@ -22,8 +37,8 @@ class BlikiTest < Test::Unit::TestCase
   end
   def teardown
     # clear mock content
-    ["db/test/datastore/pages/*","db/test/datastore/posts/*"].each do |dir|
-      FileUtils.rm Dir[dir]
+    Dir["db/test/datastore/**/*"].each do |file|
+      FileUtils.remove_file file unless File.directory? file
     end
   end
 
@@ -194,10 +209,37 @@ class BlikiTest < Test::Unit::TestCase
     assert body.scan("<a href=\"#{Sinatra.options.base_url}/wikiword\">WikiWord</a>").size > 0
     assert body.scan("<a href=\"#{Sinatra.options.base_url}/wikiwikiword\">WikiWikiWord</a>").size > 0
   end
+
   # CSS: Base CSS
   def test_css_works
     get_it "/base.css"
     assert_equal 200, status
+  end
+
+  # Attachments
+  test "attachment relationships work at model level" do
+    post_with_attach = Post.new(:title => "Post with attach", :body => "this post has an attach", :tags => "attach")
+    post_with_attach.save
+    a = Attachment.new(:name => "foo", :path => Sinatra.options.public, :content => File.open("README.markdown"), :post_id => post_with_attach.id)
+    a.save
+    b = Attachment.new(:name => "bar", :path => Sinatra.options.public, :content => File.open("README.markdown"), :post_id => post_with_attach.id)
+    b.save
+    assert_equal 2, post_with_attach.attachment.size
+  end
+  test "Attachments are created with unique names" do
+    a = Attachment.new(:name => "test_one", :path => Sinatra.options.public, :content => File.open("README.markdown"))
+    a.save
+    b = Attachment.new(:name => "test_one", :path => Sinatra.options.public, :content => File.open("README.markdown"))
+    assert b.save == false
+  end
+  test "Files are created when saving attachments" do
+    a = Attachment.new(:name => "attach", :path => Sinatra.options.public, :content => File.open("README.markdown"))
+    assert a.save == true, "File already exists"
+    assert File.exist?(Sinatra.options.public / a.name ), "File not created"
+  end
+  test "Content for attachments is saved correctly" do
+    a = Attachment[1]
+    assert File.open(a.path / a.name,"r").read.scan("bliki").size > 1
   end
 
   # Feed
