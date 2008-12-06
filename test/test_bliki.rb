@@ -15,9 +15,10 @@ class BlikiTest < Test::Unit::TestCase
       FileUtils.rm Dir[dir]
     end
     # clear mock content
-    ["db/test/datastore/pages/*","db/test/datastore/posts/*"].each do |dir|
-      FileUtils.rm Dir[dir]
+    Dir["db/test/datastore/**/*"].each do |file|
+      FileUtils.remove_file file unless File.directory? file
     end
+    Stone.start(Dir.pwd + "/db/#{Sinatra.env.to_s}", Dir.glob(File.join(Dir.pwd,"models/*")))
   end
   def teardown
     # clear mock content
@@ -97,17 +98,17 @@ class BlikiTest < Test::Unit::TestCase
 
   # Stone, I hate you
   def test_stone_works_as_expected_and_not_as_a_fucking_weasel
+    all_posts_start = Post.all.size
     first_post = Post[1]
     assert_equal 1, first_post.id
-    all_posts = Post.all
-    assert_equal 2, all_posts.size
     new_post = Post.new(:title => "Third post", :body => "Third post", :tags => "third")
     new_post.save
-    all_posts = Post.all
-    assert_equal 3, all_posts.size
+    all_posts_end = Post.all.size
+    assert_equal all_posts_end, all_posts_start + 1
   end
   def test_stone_works_with_more_than_99_existing_posts
-    (4..200).each do |i|
+    post_count = Post.all.size
+    (1..200-post_count).each do |i|
       tmp_post = Post.new(:title => "Post #{i}", :body => "Body #{i}", :tags => "tag#{i}" )
       tmp_post.save
     end
