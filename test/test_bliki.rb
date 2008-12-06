@@ -37,6 +37,9 @@ class BlikiTest < Test::Unit::TestCase
       FileUtils.rm file unless File.directory? file
     end
     Stone.start(Dir.pwd + "/db/#{Sinatra.env.to_s}", Dir.glob(File.join(Dir.pwd,"models/*")))
+    # create one post
+    p = Post.new(:title => "First post", :body => "This is a sample post", :tags => "test")
+    p.save
   end
   def teardown
     # clear mock content
@@ -45,36 +48,31 @@ class BlikiTest < Test::Unit::TestCase
     end
   end
 
-  def test_for_truth
-    # just because...
-    assert true
-  end
-
   # Test application runs at all
-  def test_sinatra_is_loaded
+  test "Sinatra is loaded" do
     assert_instance_of Module, Sinatra
   end
-  def test_views_folder
+  test "Views folder is correctly setup" do
     assert_equal "themes/#{Sinatra.options.theme}", Sinatra.options.views
   end
-  def test_application_is_running
+  test "Application is running" do
     get_it "/"
     assert_equal 200, status
   end
 
   # Content
-  def test_title_is_ok
+  test "Title is Ok" do
     get_it "/"
     assert body.scan(/#{Sinatra.options.title}/).size > 0
   end
 
   # Mock content
   # Make sure authorization is disabled
-  def test_auth_is_disabled
+  test "Auth is disabled in testing environment" do
     assert_equal false, Sinatra.application.options.use_auth
   end
   # Mock content: Posts
-  def test_post_creation_works_under_the_hood
+  test "Post creation works under the hood" do
     first_post = Post.new(:title => "First post", :body => "Wadus wadus", :tags => "foo, bar")
     first_post.save
     get_it "/post/first-post"
@@ -84,7 +82,7 @@ class BlikiTest < Test::Unit::TestCase
     get_it "/tag/bar"
     assert_equal 200, status
   end
-  def test_post_creation_works_over_the_hood
+  test "Post creation works over the hood" do
     post_it "/new", :title => "Second post", :body => "Wadus wadus", :tags => "wadus, badus"
     get_it "/post/second-post"
     assert_equal 200, status
@@ -94,7 +92,7 @@ class BlikiTest < Test::Unit::TestCase
     assert_equal 200, status
   end
   # Mock content: Pages
-  def test_page_creation_works_under_the_hood
+  test "Page creation works under the hood" do
     first_page = Page.new(:title => "First page", :body => "Wadus wadus", :tags => "foo, bar")
     first_page.save
     get_it "/first-page"
@@ -104,7 +102,7 @@ class BlikiTest < Test::Unit::TestCase
     get_it "/tag/bar"
     assert_equal 200, status
   end
-  def test_page_creation_works_over_the_hood
+  test "Page creation works over the hood" do
     post_it "/2/new", :title => "Second page", :body => "Wadus wadus", :tags => "wadus, badus"
     get_it "/second-page"
     assert_equal 200, status
@@ -114,8 +112,8 @@ class BlikiTest < Test::Unit::TestCase
     assert_equal 200, status
   end
 
-  # Stone, I hate you
-  def test_stone_works_as_expected_and_not_as_a_fucking_weasel
+  # Stone
+  test "Stone works as expected" do
     all_posts_start = Post.all.size
     first_post = Post[1]
     assert_equal 1, first_post.id
@@ -124,7 +122,7 @@ class BlikiTest < Test::Unit::TestCase
     all_posts_end = Post.all.size
     assert_equal all_posts_end, all_posts_start + 1
   end
-  def test_stone_works_with_more_than_99_existing_posts
+  test "Stone works with more than 99 existing posts" do
     post_count = Post.all.size
     (1..200-post_count).each do |i|
       tmp_post = Post.new(:title => "Post #{i}", :body => "Body #{i}", :tags => "tag#{i}" )
@@ -142,16 +140,16 @@ class BlikiTest < Test::Unit::TestCase
     assert_equal(300, all_posts.size)
     assert_equal(Post[300], all_posts.last)
   end
-  def test_posts_have_a_creation_date
+  test "Posts have a creation date" do
     first_post = Post[1]
     assert_not_nil first_post.created_at
   end
-  def test_posts_have_an_update_date
+  test "Posts have an update date" do
     first_post = Post[1]
     assert_not_nil first_post.updated_at
     assert_kind_of DateTime, first_post.updated_at
   end
-  def test_posts_updated_at_field_is_updated_on_save
+  test "Posts updated_at field is updated on save" do
     first_post = Post[1]
     original_updated_at = first_post.updated_at
     first_post.tags = "foo, bar, baz"
@@ -159,7 +157,7 @@ class BlikiTest < Test::Unit::TestCase
     assert_not_equal original_updated_at, first_post.updated_at
     assert_kind_of DateTime, first_post.updated_at
   end
-  def test_posts_updated_at_field_is_updated_on_put
+  test "Posts updated_at field is updated on put" do
     first_post = Post[1]
     original_updated_at = first_post.updated_at
     first_post.update_attributes(
@@ -168,44 +166,22 @@ class BlikiTest < Test::Unit::TestCase
     assert_not_equal original_updated_at, first_post.updated_at
     assert_kind_of DateTime, first_post.updated_at
   end
-  # # AUTH
-  # def test_auth_for_new_post
-  #   post_it "/new"
-  #   assert_equal 401, status
-  # end
-  # def test_auth_for_post_edit
-  #   post_it "/post/test_post/edit"
-  #   assert_equal 401, status
-  # end
-  # def test_auth_for_new_wiki_page
-  #   post_it "/wiki/test_page/new"
-  #   assert_equal 401, status
-  # end
-  # def test_auth_for_wiki_page_edit
-  #   post_it "/wiki/test_page/edit"
-  #   assert_equal 401, status
-  # end
-  # def test_auth_is_working
-  #   # This will have to wait until I learn how to do it :)
-  #   #post_it "/new", :Authorization => "Basic foo:bar"
-  # end
-  # 
 
   # Tags
-  def test_tag_page_works
+  test "Tag page works" do
     get_it "/tag/tag1"
     assert_equal 200, status
   end
 
   # Content
-  def test_wikilinks
+  test "wikilinks are converted to links" do
     new_page = Page.new(:title => "test_page", :body => "[[wikilink1]] [[wikilink2]]", :tags => "wiki")
     new_page.save
     get_it "/test_page"
     assert body.scan("<a href=\"#{Sinatra.options.base_url}/wikilink1\">wikilink1</a>").size > 0
     assert body.scan("<a href=\"#{Sinatra.options.base_url}/wikilink2\">wikilink2</a>").size > 0
   end
-  def test_wikiwords
+  test "WikiWords are converted to links" do
     new_page = Page.new(:title => "test_wikiwords", :body => "WikiWord WikiWikiWord", :tags => "wiki")
     new_page.save
     get_it "/test_wikiwords"
@@ -214,7 +190,7 @@ class BlikiTest < Test::Unit::TestCase
   end
 
   # CSS: Base CSS
-  def test_css_works
+  test "CSS works" do
     get_it "/base.css"
     assert_equal 200, status
   end
@@ -247,7 +223,7 @@ class BlikiTest < Test::Unit::TestCase
   end
 
   # Feed
-  def test_the_damn_fucking_feed
+  test "Feed is valid" do
     get_it "/feed/"
     assert_equal 200, status
     assert_valid_feed body
