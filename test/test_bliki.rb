@@ -199,25 +199,25 @@ class BlikiTest < Test::Unit::TestCase
   test "attachment relationships work at model level" do
     post_with_attach = Post.new(:title => "Post with attach", :body => "this post has an attach", :tags => "attach")
     post_with_attach.save
-    a = Attachment.new(:name => "foo", :path => Sinatra.options.public, :content => File.open("README.markdown"), :post_id => post_with_attach.id)
+    a = Attachment.new(:name => "foo", :path => Sinatra.options.public, :content => File.open("README.markdown").read, :post_id => post_with_attach.id)
     a.save
-    b = Attachment.new(:name => "bar", :path => Sinatra.options.public, :content => File.open("README.markdown"), :post_id => post_with_attach.id)
+    b = Attachment.new(:name => "bar", :path => Sinatra.options.public, :content => File.open("README.markdown").read, :post_id => post_with_attach.id)
     b.save
     assert_equal 2, post_with_attach.attachment.size
   end
   test "Attachments are created with unique names" do
-    a = Attachment.new(:name => "test_one", :path => Sinatra.options.public, :content => File.open("README.markdown"))
-    a.save
-    b = Attachment.new(:name => "test_one", :path => Sinatra.options.public, :content => File.open("README.markdown"))
+    a = Attachment.new(:name => "test_one", :path => Sinatra.options.public, :content => File.open("README.markdown").read)
+    assert a.save == true
+    b = Attachment.new(:name => "test_one", :path => Sinatra.options.public, :content => File.open("README.markdown").read)
     assert b.save == false
   end
   test "Files are created when saving attachments" do
-    a = Attachment.new(:name => "attach", :path => Sinatra.options.public, :content => File.open("README.markdown"))
+    a = Attachment.new(:name => "attach", :path => Sinatra.options.public, :content => File.open("README.markdown").read)
     assert a.save == true, "File already exists"
     assert File.exist?(Sinatra.options.public / a.name ), "File not created"
   end
   test "Content for attachments is saved correctly" do
-    a = Attachment.new(:name => "attach_content", :path => Sinatra.options.public, :content => File.open("README.markdown"))
+    a = Attachment.new(:name => "attach_content", :path => Sinatra.options.public, :content => File.open("README.markdown").read)
     a.save
     assert File.open(a.path / a.name,"r").read.scan("bliki").size > 1
   end
