@@ -192,8 +192,6 @@ get '/base.css' do
 end
 
 # Theme support
-['/:ext/:filename.:ext','/img/:filename.:ext'].each do |route|
-  get route do
-    send_file "themes/#{Sinatra.options.theme}/#{params[:ext]}/#{params[:filename]}.#{params[:ext]}", :disposition => "inline"
-  end
+get '/:type/:filename.:ext' do
+  send_file "themes/#{Sinatra.options.theme}/#{params[:type]}/#{params[:filename]}.#{params[:ext]}", :disposition => "inline"
 end
