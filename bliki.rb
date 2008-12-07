@@ -14,26 +14,33 @@ end
 
 #####################################################################################
 # Setup
-configure do
+def stone_start
   Stone.start(Dir.pwd + "/db/#{Sinatra.env.to_s}", Dir.glob(File.join(Dir.pwd,"models/*")))
+end
+def load_config
   YAML::load(File.read('config.yml')).to_hash.each do |k,v|
     set k, v
   end
   theme = Sinatra.options.theme || "default"
   set :views, "themes/#{theme}"
 end
-configure :development do
-  set :cache_enabled, false
-  set :ping, false
-  Sinatra.options.development.each do |k,v|
+def set_options_for env
+  Sinatra.options.send(env).each do |k,v|
     set k, v
   end
 end
+configure do
+  stone_start
+  load_config
+end
+configure :development do
+  set :cache_enabled, false
+  set :ping, false
+  set_options_for :development
+end
 configure :production do
   disable :logging
-  Sinatra.options.production.each do |k,v|
-    set k, v
-  end
+  set_options_for :production
   not_found do
     redirect "/"
   end
@@ -43,11 +50,13 @@ configure :production do
 end
 configure :test do
   set :cache_enabled, false
-  Sinatra.options.test.each do |k,v|
-    set k, v
-  end
+  set_options_for :test
 end
-
+if development?
+  stone_start
+  load_config
+  set_options_for :development
+end
 
 before do
   content_type 'text/html', :charset => 'utf-8'
