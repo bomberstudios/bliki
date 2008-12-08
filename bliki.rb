@@ -53,6 +53,12 @@ configure :test do
   set_options_for :test
 end
 if development?
+  Dir["lib/*.rb"].each do |f|
+    load f
+  end
+  Dir["lib/plugin/*.rb"].each do |f|
+    load f
+  end
   stone_start
   load_config
   set_options_for :development
