@@ -37,6 +37,7 @@ production:
   limit: 5
   reinvigorate_code: xxxxx-xxxxxxxxxx
   use_comments: true
+  ping: true
 
 test:
   name: Your Blog Title
