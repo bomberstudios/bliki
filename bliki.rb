@@ -96,12 +96,7 @@ get '/new' do
 end
 post '/new' do
   auth
-  post = Post.new(
-    :title => params[:title],
-    :body => params[:body],
-    :tags => params[:tags]
-  )
-  post.save
+  post = Post.new(params)
   expire_cache "/"
   expire_cache "/feed/"
   # Ping
@@ -126,11 +121,7 @@ end
 post '/post/:id/edit' do
   auth
   post = Post[params[:id]]
-  post.update_attributes(
-    :title => params[:title],
-    :body => params[:body],
-    :tags => params[:tags]
-  )
+  post.update_attributes(params)
   expire_cache "/"
   expire_cache "/feed/"
   expire_cache post.link
@@ -159,12 +150,7 @@ get '/:slug/new' do
 end
 post '/:slug/new' do
   auth
-  @page = Page.new(
-    :title => params[:title],
-    :body => params[:body],
-    :tags => params[:tags]
-  )
-  @page.save
+  @page = Page.new(params)
   redirect @page.link
 end
 
@@ -177,11 +163,7 @@ end
 post '/:id/edit' do
   auth
   post = Page[params[:id]]
-  post.update_attributes(
-    :title => params[:title],
-    :body => params[:body],
-    :tags => params[:tags]
-  )
+  post.update_attributes(params)
   expire_cache post.link
   redirect post.link
 end
