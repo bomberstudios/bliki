@@ -4,6 +4,7 @@ end
 
 task :update do
   %x(git pull)
+  %x(git submodule update)
   %x(touch tmp/restart.txt)
   %x(rm -Rf public/*)
 end
