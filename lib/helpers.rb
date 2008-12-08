@@ -34,7 +34,7 @@ helpers do
     date.strftime("%Y-%m-%dT%H:%M:%SZ")
   end
   def disqus
-    return "<div id=\"disqus_thread\"></div><script type=\"text/javascript\" src=\"http://disqus.com/forums/#{Sinatra.options.disqus_id}/embed.js\"></script><noscript><a href=\"http://#{Sinatra.options.disqus_id}.disqus.com/?url=ref\">View the discussion thread.</a></noscript><a href=\"http://disqus.com\" class=\"dsq-brlink\">blog comments powered by <span class=\"logo-disqus\">Disqus</span></a>"
+    return "<div id=\"disqus_thread\"></div><script type=\"text/javascript\" src=\"http://disqus.com/forums/#{Sinatra.options.disqus_id}/embed.js\"></script><noscript><a href=\"http://#{Sinatra.options.disqus_id}.disqus.com/?url=ref\">View the discussion thread.</a></noscript><a href=\"http://disqus.com\" class=\"dsq-brlink\">blog comments powered by <span class=\"logo-disqus\">Disqus</span></a>" unless @post.is_a? Page
   end
   def form
     if @post
