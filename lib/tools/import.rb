@@ -4,6 +4,7 @@ require 'rexml/document'
 require 'lib/datetime'
 require 'time'
 require 'stone'
+require 'pp'
 
 def parse_wordpress_xml from_filename
   file = File.read(from_filename)
