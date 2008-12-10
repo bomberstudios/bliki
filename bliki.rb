@@ -1,5 +1,4 @@
 require "rubygems"
-require "lib/datetime"
 require "lib/sinatra/lib/sinatra"
 require "lib/sinatra-cache/lib/cache"
 require "lib/stone/lib/stone"
