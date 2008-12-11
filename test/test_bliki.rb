@@ -28,11 +28,11 @@ class BlikiTest < Test::Unit::TestCase
   def setup
     # reset cache
     Dir["public/**/*"].each do |file|
-      FileUtils.rm file
+      FileUtils.rm file unless File.directory? file
     end
     FileUtils.mkdir_p "test/public"
     Dir["test/public/**/*"].each do |file|
-      FileUtils.rm file
+      FileUtils.rm file unless File.directory? file
     end
     # clear mock content
     Dir["db/test/datastore/**/*"].each do |file|
