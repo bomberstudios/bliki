@@ -1,10 +1,4 @@
 # Import tools
-require 'rubygems'
-require 'rexml/document'
-require 'time'
-require 'stone'
-require 'pp'
-
 def parse_wordpress_xml from_filename
   file = File.read(from_filename)
   # Fix some nasty thingies

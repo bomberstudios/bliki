@@ -1,3 +1,12 @@
+require 'rubygems'
+require 'lib/stone/lib/stone'
+require 'lib/tools/import'
+require "lib/tools/configuration"
+require "yaml"
+require 'rexml/document'
+require 'time'
+require 'pp'
+
 task :clean do
   %x(rm -Rf datastore)
 end
@@ -27,12 +36,10 @@ end
 
 desc "Create initial configuration"
 task :configure do
-  require "lib/tools/configuration"
   Bliki::Configuration::configure "config.sample.yml", "config.yml"
 end
 
 namespace :import do
-  require 'lib/tools/import'
   desc "Clean imported data in DB=environment (default: development)"
   task :clean do
     %x(rm -Rf db/#{ENV['DB'] || 'development'}/*)
@@ -51,7 +58,6 @@ namespace :import do
 end
 
 task :deploy do
-  require "yaml"
   options = YAML.load(File.read("config.yml"))["deploy"]
   sh("scp config.yml #{options['username']}@#{options['hostname']}:#{options['folder']}/config.yml")
   sh("rsync -arzc -e=ssh themes/ #{options['username']}@#{options['hostname']}:#{options['folder']}/themes/")
