@@ -9,3 +9,12 @@ class Symbol
     return self.to_s.size <= 0
   end
 end
+
+class String
+  # From Ruby Facets
+  #
+  # placed here because Dreamhost insists on not requiring facets correctly
+  def titlecase
+    gsub(/\b\w/){$&.upcase}
+  end
+end
