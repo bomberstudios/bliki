@@ -205,7 +205,7 @@ class BlikiTest < Test::Unit::TestCase
     a.save
     b = Attachment.new(:name => "bar", :path => Sinatra.options.public, :content => File.open("README.markdown").read, :post_id => post_with_attach.id)
     b.save
-    assert_equal 2, post_with_attach.attachment.size
+    assert_equal 2, post_with_attach.attachments.size
   end
   test "Attachments are created with unique names" do
     a = Attachment.new(:name => "test_one", :path => Sinatra.options.public, :content => File.open("README.markdown").read)
@@ -230,4 +230,6 @@ class BlikiTest < Test::Unit::TestCase
     assert_equal 200, status
     assert_valid_feed body
   end
+
+  # TODO: Test passenger, somehow
 end

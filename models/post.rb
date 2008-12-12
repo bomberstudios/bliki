@@ -9,6 +9,6 @@ class Post
   field :created_at, DateTime
   field :updated_at, DateTime
 
-  has_many :attachment
+  has_many :attachments
   before_save :update_slug
 end
