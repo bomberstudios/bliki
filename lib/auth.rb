@@ -51,11 +51,10 @@ end
 module Sinatra
   class EventContext
     include HttpAuthentication::Basic
+    def auth
+      authenticate_or_request_with_http_basic do |user_name, password|
+        user_name == Sinatra.options.username && Digest::SHA1.hexdigest(password) == Sinatra.options.password
+      end if Sinatra.options.use_auth
+    end
   end
-end
-
-def auth
-  authenticate_or_request_with_http_basic do |user_name, password|
-    user_name == Sinatra.options.username && Digest::SHA1.hexdigest(password) == Sinatra.options.password
-  end if Sinatra.options.use_auth
 end
