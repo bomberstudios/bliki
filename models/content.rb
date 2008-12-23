@@ -18,7 +18,7 @@ module BlikiContent
   end
   def content
     @content_plugins = body
-    self.methods.each do |m|
+    self.methods.sort.each do |m|
       @content_plugins = self.send(m, @content_plugins) if m =~ /^plugin_/
     end
     html = RDiscount.new(@content_plugins).to_html
