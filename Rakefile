@@ -25,7 +25,9 @@ end
 task :test do
   %x(mkdir db) unless File.exist?("db")
   %x(mkdir db/test) unless File.exist?("db/test")
-  sh("ruby test/test_bliki.rb")
+  Dir.glob("test/test_*.rb").each do |file|
+    sh("ruby #{file}")
+  end
 end
 
 task :install do
