@@ -11,17 +11,6 @@ task :clean do
   %x(rm -Rf datastore)
 end
 
-task :update do
-  %x(git pull)
-  %x(git submodule update)
-  %x(touch tmp/restart.txt)
-  %x(rm -Rf public/*)
-end
-
-task :restart do
-  %x(touch tmp/restart.txt)
-end
-
 task :test do
   %x(mkdir db) unless File.exist?("db")
   %x(mkdir db/test) unless File.exist?("db/test")
@@ -59,10 +48,4 @@ namespace :import do
   # end
 end
 
-task :deploy do
-  options = YAML.load(File.read("config.yml"))["deploy"]
-  sh("scp config.yml #{options['username']}@#{options['hostname']}:#{options['folder']}/config.yml")
-  sh("rsync -arzc -e=ssh themes/ #{options['username']}@#{options['hostname']}:#{options['folder']}/themes/")
-  sh("ssh #{options['username']}@#{options['hostname']} 'cd #{options['folder']}; rake update'")
-end
 task :default => :test
