@@ -23,7 +23,7 @@ server domain, :app, :web
 namespace :deploy do
   task :after_symlink do
     run_locally("scp config.yml #{options['deploy']['username']}@#{options['deploy']['hostname']}:#{shared_path}/config.yml")
-    run_locally("scp -r themes/#{options['theme']} #{options['deploy']['username']}@#{options['deploy']['hostname']}:#{shared_path}/themes/#{options['theme']}")
+    run_locally("rsync -azv themes/#{options['theme']} #{options['deploy']['username']}@#{options['deploy']['hostname']}:#{shared_path}/themes/#{options['theme']}")
     ["db", "themes/#{options['theme']}", "config.yml"].each do |link|
       run "ln -nfs #{shared_path}/#{link} #{current_path}/#{link}"
     end
