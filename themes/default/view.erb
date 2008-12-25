@@ -5,6 +5,14 @@
     <%= @post.content %>
   </div>
   <%= disqus if Sinatra.options.use_comments %>
+  <div id="navigation">
+<% if @post.prev %>
+    <span class="left"><%= link_to "«" + @post.prev_by_created_at.title, @post.prev_by_created_at.link %></span>
+<% end %>
+<% if @post.next %>
+    <span class="right"><%= link_to @post.next_by_created_at.title + "»", @post.next_by_created_at.link %></span>
+<% end %>
+  </div>
 </div>
 <div class="admin"><a href="<%= @post.edit_link %>" accesskey="e">edit</a></div>
 <div class="admin"><a href="/new" accesskey="n">new</a></div>
