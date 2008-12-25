@@ -16,7 +16,7 @@
     <div id="about">
       <h4>about</h4>
       <p>this is the home of <%= Sinatra.options.author_name %>.</p>
-      <p>i talk about <%= tag_list @tags %></p>
+      <h4>i talk about <%= tag_list @tags %></h4>
     </div>
     <div id="footer">powered by <%= link_to "bliki", "http://github.com/bomberstudios/bliki" %></div>
     <%= reinvigorate unless development? %>
