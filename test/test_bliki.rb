@@ -17,7 +17,6 @@ class BlikiTest < Test::Unit::TestCase
     Stone.start(Dir.pwd + "/db/#{Sinatra.env.to_s}", Dir.glob(File.join(Dir.pwd,"models/*")))
     # create one post
     p = Post.new(:title => "First post", :body => "This is a sample post", :tags => "test")
-    p.save
   end
   def teardown
     # clear mock content
@@ -52,7 +51,6 @@ class BlikiTest < Test::Unit::TestCase
   # Mock content: Posts
   test "Post creation works under the hood" do
     first_post = Post.new(:title => "First post", :body => "Wadus wadus", :tags => "foo, bar")
-    first_post.save
     get_it "/post/first-post"
     assert_equal 200, status
     get_it "/tag/foo"
@@ -72,7 +70,6 @@ class BlikiTest < Test::Unit::TestCase
   # Mock content: Pages
   test "Page creation works under the hood" do
     first_page = Page.new(:title => "First page", :body => "Wadus wadus", :tags => "foo, bar")
-    first_page.save
     get_it "/first-page"
     assert_equal 200, status
     get_it "/tag/foo"
@@ -96,7 +93,6 @@ class BlikiTest < Test::Unit::TestCase
     first_post = Post[1]
     assert_equal 1, first_post.id
     new_post = Post.new(:title => "Third post", :body => "Third post", :tags => "third")
-    new_post.save
     all_posts_end = Post.all.size
     assert_equal all_posts_end, all_posts_start + 1
   end
@@ -104,7 +100,6 @@ class BlikiTest < Test::Unit::TestCase
     post_count = Post.all.size
     (1..200-post_count).each do |i|
       tmp_post = Post.new(:title => "Post #{i}", :body => "Body #{i}", :tags => "tag#{i}" )
-      tmp_post.save
     end
     all_posts = Post.all
     assert_equal(200, all_posts.size)
@@ -112,7 +107,6 @@ class BlikiTest < Test::Unit::TestCase
     assert_equal(Post[200], all_posts.last)
     (1..100).each do |i|
       tmp_post = Post.new(:title => "Post #{i}", :body => "Body #{i}", :tags => "tag#{i}" )
-      tmp_post.save
     end
     all_posts = Post.all
     assert_equal(300, all_posts.size)
@@ -154,14 +148,12 @@ class BlikiTest < Test::Unit::TestCase
   # Content
   test "wikilinks are converted to links" do
     new_page = Page.new(:title => "test_page", :body => "[[wikilink1]] [[wikilink2]]", :tags => "wiki")
-    new_page.save
     get_it "/test_page"
     assert body.scan("<a href=\"#{Sinatra.options.base_url}/wikilink1\">wikilink1</a>").size > 0
     assert body.scan("<a href=\"#{Sinatra.options.base_url}/wikilink2\">wikilink2</a>").size > 0
   end
   test "WikiWords are converted to links" do
     new_page = Page.new(:title => "test_wikiwords", :body => "WikiWord WikiWikiWord", :tags => "wiki")
-    new_page.save
     get_it "/test_wikiwords"
     assert body.scan("<a href=\"#{Sinatra.options.base_url}/wikiword\">WikiWord</a>").size > 0
     assert body.scan("<a href=\"#{Sinatra.options.base_url}/wikiwikiword\">WikiWikiWord</a>").size > 0
@@ -176,11 +168,8 @@ class BlikiTest < Test::Unit::TestCase
   # Attachments
   test "attachment relationships work at model level" do
     post_with_attach = Post.new(:title => "Post with attach", :body => "this post has an attach", :tags => "attach")
-    post_with_attach.save
     a = Attachment.new(:name => "foo", :path => Sinatra.options.public, :content => File.open("README.markdown").read, :post_id => post_with_attach.id)
-    a.save
     b = Attachment.new(:name => "bar", :path => Sinatra.options.public, :content => File.open("README.markdown").read, :post_id => post_with_attach.id)
-    b.save
     assert_equal 2, post_with_attach.attachments.size
   end
   test "Attachments are created with unique names" do
@@ -196,7 +185,6 @@ class BlikiTest < Test::Unit::TestCase
   end
   test "Content for attachments is saved correctly" do
     a = Attachment.new(:name => "attach_content", :path => Sinatra.options.public, :content => File.open("README.markdown").read)
-    a.save
     assert File.open(a.path / a.name,"r").read.scan("bliki").size > 1
   end
 
