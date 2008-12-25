@@ -15,7 +15,7 @@ set :scm, 'git'
 set :branch, 'master'
 set :git_shallow_clone, 1
 set :git_enable_submodules, 1
-set :scm_verbose, false
+set :scm_verbose, true
 set :use_sudo, false
 
 server domain, :app, :web
@@ -24,11 +24,9 @@ namespace :deploy do
   task :after_symlink do
     run_locally("scp config.yml #{options['deploy']['username']}@#{options['deploy']['hostname']}:#{shared_path}/config.yml")
     run_locally("scp -r themes/#{options['theme']} #{options['deploy']['username']}@#{options['deploy']['hostname']}:#{shared_path}/themes/#{options['theme']}")
-    ["public", "db", "themes/#{options['theme']}", "config.yml"].each do |link|
+    ["db", "themes/#{options['theme']}", "config.yml"].each do |link|
       run "ln -nfs #{shared_path}/#{link} #{current_path}/#{link}"
     end
-    # remove cached files
-    run "rm -Rf #{shared_path}/public/*"
   end
   task :restart do
     run "touch #{current_path}/tmp/restart.txt" 
