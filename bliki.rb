@@ -17,7 +17,7 @@ def stone_start
   Stone.start(Dir.pwd + "/db/#{Sinatra.env.to_s}", Dir.glob(File.join(Dir.pwd,"models/*")))
 end
 def load_config
-  YAML::load(File.read('config.yml')).to_hash.each do |k,v|
+  YAML::load(File.exist?('config.yml') ? File.read('config.yml') : File.read('config.sample.yml')).to_hash.each do |k,v|
     set k, v
   end
   theme = Sinatra.options.theme || "default"
