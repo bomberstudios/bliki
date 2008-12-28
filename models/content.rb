@@ -17,12 +17,11 @@ module BlikiContent
     self.created_at.strftime("%Y")
   end
   def content
-    @content_plugins = body
+    content_plugins = body
     self.methods.sort.each do |m|
-      @content_plugins = self.send(m, @content_plugins) if m =~ /^plugin_/
+      content_plugins = self.send(m, content_plugins) if m =~ /^plugin_/
     end
-    html = RDiscount.new(@content_plugins).to_html
-    return html
+    RDiscount.new(content_plugins).to_html
   end
   def link
     "/#{self.year}/#{self.month}/#{self.day}/#{self.nicetitle}/"
