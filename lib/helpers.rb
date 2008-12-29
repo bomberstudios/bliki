@@ -36,6 +36,20 @@ helpers do
   def disqus
     return "<div id=\"disqus_thread\"></div><script type=\"text/javascript\" src=\"http://disqus.com/forums/#{Sinatra.options.disqus_id}/embed.js\"></script><noscript><a href=\"http://#{Sinatra.options.disqus_id}.disqus.com/?url=ref\">View the discussion thread.</a></noscript><a href=\"http://disqus.com\" class=\"dsq-brlink\">blog comments powered by <span class=\"logo-disqus\">Disqus</span></a>" unless @post.is_a? Page
   end
+  def post_navigation
+    html = ""
+    if ((@post.is_a? Post) && (@post.next || @post.prev))
+      html << "<div id=\"navigation\">"
+      if @post.prev
+        html <<  "<span class=\"left\">#{link_to '«' + @post.prev_by_created_at.title, @post.prev_by_created_at.link}</span>"
+      end
+      if @post.next
+        html << "<span class=\"right\">#{link_to @post.next_by_created_at.title + '»', @post.next_by_created_at.link}</span>"
+      end
+      html << "</div>"
+    end
+    return html.chomp
+  end
   def form
     if @post
       @title = @post.title

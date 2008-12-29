@@ -1,20 +1,12 @@
-<div class="<%= @post.class.to_s.downcase %>">
-  <h2 class="title"><%= @post.title %></h2>
-  <small>posted on <%= @post.date %> by <%= Sinatra.options.author_name %>, tagged with <%= tag_list @post.tags %></small>
-  <div class="body">
-    <%= @post.content %>
-  </div>
-  <%= disqus if Sinatra.options.use_comments %>
-<% if @post.is_a? Post %>
-  <div id="navigation">
-<% if @post.prev %>
-    <span class="left"><%= link_to "«" + @post.prev_by_created_at.title, @post.prev_by_created_at.link %></span>
-<% end %>
-<% if @post.next %>
-    <span class="right"><%= link_to @post.next_by_created_at.title + "»", @post.next_by_created_at.link %></span>
-<% end %>
-  </div>
-<% end %>
-</div>
-<div class="admin"><a href="<%= @post.edit_link %>" accesskey="e">edit</a></div>
-<div class="admin"><a href="/new" accesskey="n">new</a></div>
+      <div class="<%= @post.class.to_s.downcase %>">
+        <h2 class="title"><%= @post.title %></h2>
+        <small>posted on <%= @post.date %> by <%= Sinatra.options.author_name %>, tagged with <%= tag_list @post.tags %></small>
+        <div class="body">
+          <%= @post.content %>
+        </div>
+        <%= disqus if Sinatra.options.use_comments %>
+        <%= post_navigation %>
+      </div>
+      <!-- .post -->
+      <div class="admin"><a href="<%= @post.edit_link %>" accesskey="e">edit</a></div>
+      <div class="admin"><a href="/new" accesskey="n">new</a></div>
