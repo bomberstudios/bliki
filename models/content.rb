@@ -21,7 +21,7 @@ module BlikiContent
     self.methods.sort.each do |m|
       content_plugins = self.send(m, content_plugins) if m =~ /^plugin_/
     end
-    RDiscount.new(content_plugins).to_html
+    RDiscount.new(content_plugins).to_html.chomp
   end
   def link
     "/#{self.year}/#{self.month}/#{self.day}/#{self.nicetitle}/"
