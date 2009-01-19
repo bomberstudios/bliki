@@ -3,7 +3,7 @@
 	url = git://github.com/kematzy/sinatra-cache.git
 [submodule "lib/sinatra"]
 	path = lib/sinatra
-	url = git://github.com/bmizerany/sinatra.git
+	url = git://github.com/sinatra/sinatra.git
 [submodule "lib/stone"]
 	path = lib/stone
 	url = git://github.com/bomberstudios/stone.git
