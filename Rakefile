@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'lib/stone/lib/stone'
 require 'lib/tools/import'
 require "lib/tools/configuration"
 require "yaml"
@@ -31,6 +30,11 @@ task :configure do
 end
 
 namespace :import do
+  begin
+    require 'lib/stone/lib/stone'
+  rescue LoadError
+    false
+  end
   desc "Clean imported data in DB=environment (default: development)"
   task :clean do
     %x(rm -Rf db/#{ENV['DB'] || 'development'}/*)
