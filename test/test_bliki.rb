@@ -30,7 +30,7 @@ class BlikiTest < Test::Unit::TestCase
     assert_instance_of Module, Sinatra
   end
   test "Views folder is correctly setup" do
-    assert_equal "themes/#{Sinatra.options.theme}", Sinatra.options.views
+    assert_equal "themes/#{Sinatra::Application.theme}", Sinatra::Application.views
   end
   test "Application is running" do
     get_it "/"
@@ -40,7 +40,7 @@ class BlikiTest < Test::Unit::TestCase
   # Content
   test "Title is Ok" do
     get_it "/"
-    assert body.scan(/#{Sinatra.options.title}/).size > 0
+    assert body.scan(/#{Sinatra::Application.title}/).size > 0
   end
 
   # Mock content
@@ -149,14 +149,14 @@ class BlikiTest < Test::Unit::TestCase
   test "wikilinks are converted to links" do
     new_page = Page.new(:title => "test_page", :body => "[[wikilink1]] [[wikilink2]]", :tags => "wiki")
     get_it "/test_page"
-    assert body.scan("<a href=\"#{Sinatra.options.base_url}/wikilink1\">wikilink1</a>").size > 0
-    assert body.scan("<a href=\"#{Sinatra.options.base_url}/wikilink2\">wikilink2</a>").size > 0
+    assert body.scan("<a href=\"#{Sinatra::Application.base_url}/wikilink1\">wikilink1</a>").size > 0
+    assert body.scan("<a href=\"#{Sinatra::Application.base_url}/wikilink2\">wikilink2</a>").size > 0
   end
   test "WikiWords are converted to links" do
     new_page = Page.new(:title => "test_wikiwords", :body => "WikiWord WikiWikiWord", :tags => "wiki")
     get_it "/test_wikiwords"
-    assert body.scan("<a href=\"#{Sinatra.options.base_url}/wikiword\">WikiWord</a>").size > 0
-    assert body.scan("<a href=\"#{Sinatra.options.base_url}/wikiwikiword\">WikiWikiWord</a>").size > 0
+    assert body.scan("<a href=\"#{Sinatra::Application.base_url}/wikiword\">WikiWord</a>").size > 0
+    assert body.scan("<a href=\"#{Sinatra::Application.base_url}/wikiwikiword\">WikiWikiWord</a>").size > 0
   end
 
   # CSS: Base CSS
@@ -168,23 +168,23 @@ class BlikiTest < Test::Unit::TestCase
   # Attachments
   test "attachment relationships work at model level" do
     post_with_attach = Post.new(:title => "Post with attach", :body => "this post has an attach", :tags => "attach")
-    a = Attachment.new(:name => "foo", :path => Sinatra.options.public, :content => File.open("README.markdown").read, :post_id => post_with_attach.id)
-    b = Attachment.new(:name => "bar", :path => Sinatra.options.public, :content => File.open("README.markdown").read, :post_id => post_with_attach.id)
+    a = Attachment.new(:name => "foo", :path => Sinatra::Application.public, :content => File.open("README.markdown").read, :post_id => post_with_attach.id)
+    b = Attachment.new(:name => "bar", :path => Sinatra::Application.public, :content => File.open("README.markdown").read, :post_id => post_with_attach.id)
     assert_equal 2, post_with_attach.attachments.size
   end
   test "Attachments are created with unique names" do
-    a = Attachment.new(:name => "test_one", :path => Sinatra.options.public, :content => File.open("README.markdown").read)
+    a = Attachment.new(:name => "test_one", :path => Sinatra::Application.public, :content => File.open("README.markdown").read)
     assert a.save == true
-    b = Attachment.new(:name => "test_one", :path => Sinatra.options.public, :content => File.open("README.markdown").read)
+    b = Attachment.new(:name => "test_one", :path => Sinatra::Application.public, :content => File.open("README.markdown").read)
     assert b.save == false
   end
   test "Files are created when saving attachments" do
-    a = Attachment.new(:name => "attach", :path => Sinatra.options.public, :content => File.open("README.markdown").read)
+    a = Attachment.new(:name => "attach", :path => Sinatra::Application.public, :content => File.open("README.markdown").read)
     assert a.save == true, "File already exists"
-    assert File.exist?(Sinatra.options.public / a.name ), "File not created"
+    assert File.exist?(Sinatra::Application.public / a.name ), "File not created"
   end
   test "Content for attachments is saved correctly" do
-    a = Attachment.new(:name => "attach_content", :path => Sinatra.options.public, :content => File.open("README.markdown").read)
+    a = Attachment.new(:name => "attach_content", :path => Sinatra::Application.public, :content => File.open("README.markdown").read)
     assert File.open(a.path / a.name,"r").read.scan("bliki").size > 1
   end
 

@@ -41,7 +41,7 @@ module HttpAuthentication
  
       def authentication_request(realm)
         status(401)
-        header("WWW-Authenticate" => %(Basic realm="#{realm.gsub(/"/, "")}"))
+        headers("WWW-Authenticate" => %(Basic realm="#{realm.gsub(/"/, "")}"))
         throw :halt, "HTTP Basic: Access denied.\n"
       end
  
@@ -49,12 +49,16 @@ module HttpAuthentication
 end
  
 module Sinatra
-  class EventContext
+  module Authorization
     include HttpAuthentication::Basic
     def auth
       authenticate_or_request_with_http_basic do |user_name, password|
-        user_name == Sinatra.options.username && Digest::SHA1.hexdigest(password) == Sinatra.options.password
-      end if Sinatra.options.use_auth
+        user_name == Sinatra::Application.username && Digest::SHA1.hexdigest(password) == Sinatra::Application.password
+      end if Sinatra::Application.use_auth
     end
   end
+end
+
+helpers do
+  include Sinatra::Authorization
 end

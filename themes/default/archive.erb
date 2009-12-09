@@ -1,4 +1,4 @@
-      <h2>Everything tagged with ‘<%= @tag %>’ on <%= Sinatra.options.name %>:</h2>
+      <h2>Everything tagged with ‘<%= @tag %>’ on <%= Sinatra::Application.name %>:</h2>
       <div class="group">
       <% @posts.each do |post| %>
         <h2 class="title"><%= link_to post.title, post.link %></h2>

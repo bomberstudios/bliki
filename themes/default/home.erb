@@ -6,7 +6,7 @@
           <div class="body">
           <%= post.content %>
           </div>
-          <%= "<p><a href='#{post.link}#disqus_thread'>View Comments</a></p>" if Sinatra.options.use_comments %>
+          <%= "<p><a href='#{post.link}#disqus_thread'>View Comments</a></p>" if Sinatra::Application.use_comments %>
         </div>
         <!-- .post -->
 <% end %>

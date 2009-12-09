@@ -1,7 +1,8 @@
-require "rubygems"
-require "lib/sinatra/lib/sinatra"
-require "lib/sinatra-cache/lib/cache"
+require 'rubygems'
+require 'sinatra'
 require "lib/stone/lib/stone"
+require 'sass'
+
 require "rdiscount"
 Dir["lib/*.rb"].each do |f|
   require f
@@ -14,17 +15,17 @@ end
 #####################################################################################
 # Setup
 def stone_start
-  Stone.start(Dir.pwd + "/db/#{Sinatra.env.to_s}", Dir.glob(File.join(Dir.pwd,"models/*")))
+  Stone.start(Dir.pwd + "/db/#{Sinatra::Application.environment.to_s}", Dir.glob(File.join(Dir.pwd,"models/*")))
 end
 def load_config
   YAML::load(File.exist?('config.yml') ? File.read('config.yml') : File.read('config.sample.yml')).to_hash.each do |k,v|
     set k, v
   end
-  theme = Sinatra.options.theme || "default"
+  theme = Sinatra::Application.theme || "default"
   set :views, "themes/#{theme}"
 end
 def set_options_for env
-  Sinatra.options.send(env).each do |k,v|
+  Sinatra::Application.send(env).each do |k,v|
     set k, v
   end
 end
@@ -72,8 +73,20 @@ end
 # Atom Feed
 get '/feed/' do
   content_type 'application/atom+xml', :charset => "utf-8"
-  @posts = Post.all(:order => {:updated_at => :desc}).first(Sinatra.options.limit)
-  cache(builder(:feed))
+  @posts = Post.all(:order => {:updated_at => :desc}).first(Sinatra::Application.limit)
+  builder(:feed)
+end
+
+
+#####################################################################################
+# CSS
+get '/base.css' do
+  sass(:base)
+end
+
+# Theme support
+get '/:type/:filename.:ext' do
+  send_file "themes/#{Sinatra::Application.theme}/#{params[:type]}/#{params[:filename]}.#{params[:ext]}", :disposition => "inline"
 end
 
 
@@ -81,23 +94,23 @@ end
 # Blog: Home
 get '/' do
   all_posts = Post.all(:order => {:created_at => :desc})
-  @posts = all_posts.first(Sinatra.options.limit)
-  if all_posts.size > Sinatra.options.limit
-    @archives = all_posts[(Sinatra.options.limit)...Sinatra.options.limit*2]
+  @posts = all_posts.first(Sinatra::Application.limit)
+  if all_posts.size > Sinatra::Application.limit
+    @archives = all_posts[(Sinatra::Application.limit)...Sinatra::Application.limit*2]
   end
-  cache(erb(:home))
+  erb(:home)
 end
 
 # Blog: New Post
 get '/new' do
-  auth
+  #auth
   erb(:edit)
 end
 post '/new' do
   auth
   post = Post.new(params)
-  expire_cache "/"
-  expire_cache "/feed/"
+  # expire_cache "/"
+  # expire_cache "/feed/"
   # Ping
   pingomatic
   redirect "/"
@@ -107,7 +120,7 @@ end
 ['/:year/:month/:day/:slug/','/post/:slug'].each do |route|
   get route do
     @post = Post.first :nicetitle => params[:slug]
-    cache(erb(:view))
+    erb(:view)
   end
 end
 
@@ -121,9 +134,9 @@ post '/post/:id/edit' do
   auth
   post = Post[params[:id]]
   post.update_attributes(params)
-  expire_cache "/"
-  expire_cache "/feed/"
-  expire_cache post.link
+  # expire_cache "/"
+  # expire_cache "/feed/"
+  # expire_cache post.link
   redirect post.link
 end
 
@@ -137,7 +150,7 @@ end
     if @post.nil?
       redirect "/#{params[:slug]}/new"
     else
-      cache(erb(:view))
+      erb(:view)
     end
   end
 end
@@ -163,7 +176,7 @@ post '/:id/edit' do
   auth
   post = Page[params[:id]]
   post.update_attributes(params)
-  expire_cache post.link
+  # expire_cache post.link
   redirect post.link
 end
 
@@ -173,21 +186,10 @@ end
 get '/tag/:name' do
   @tag = params[:name]
   all_posts = (Post.all :tags.includes => @tag,:order => {:created_at => :desc}) + (Page.all :tags.includes => @tag,:order => {:created_at => :desc})
-  @posts = all_posts.first(Sinatra.options.limit)
-  if all_posts.size > Sinatra.options.limit
-    @archives = all_posts[(Sinatra.options.limit)...all_posts.size]
+  @posts = all_posts.first(Sinatra::Application.limit)
+  if all_posts.size > Sinatra::Application.limit
+    @archives = all_posts[(Sinatra::Application.limit)...all_posts.size]
   end
   erb(:archive)
 end
 
-
-#####################################################################################
-# CSS
-get '/base.css' do
-  cache(sass(:base))
-end
-
-# Theme support
-get '/:type/:filename.:ext' do
-  send_file "themes/#{Sinatra.options.theme}/#{params[:type]}/#{params[:filename]}.#{params[:ext]}", :disposition => "inline"
-end

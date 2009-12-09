@@ -1,8 +1,8 @@
-base_url = Sinatra.options.base_url
+base_url = Sinatra::Application.base_url
 feed_url = base_url + "/feed/"
-title = Sinatra.options.name + " - " + Sinatra.options.title
-limit = Sinatra.options.limit
-author_name = Sinatra.options.author_name
+title = Sinatra::Application.name + " - " + Sinatra::Application.title
+limit = Sinatra::Application.limit
+author_name = Sinatra::Application.author_name
 author_uri = base_url
 # Build feed
 xml.instruct! :xml, :version => "1.0"
